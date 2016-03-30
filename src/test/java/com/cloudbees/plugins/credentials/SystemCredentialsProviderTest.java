@@ -25,10 +25,21 @@ package com.cloudbees.plugins.credentials;
 
 import com.cloudbees.plugins.credentials.impl.DummyCredentials;
 import org.apache.commons.io.FileUtils;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.junit.Rule;
+import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
 
-public class SystemCredentialsProviderTest extends HudsonTestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+public class SystemCredentialsProviderTest {
+
+    @Rule
+    public JenkinsRule r = new JenkinsRule();
+
+    @Test
     public void testSaveAndLoad() throws Exception {
         assertTrue(CredentialsProvider.lookupCredentials(Credentials.class).isEmpty());
         SystemCredentialsProvider.getInstance().save();
@@ -40,7 +51,8 @@ public class SystemCredentialsProviderTest extends HudsonTestCase {
         SystemCredentialsProvider.getInstance().save();
         assertFalse(new SystemCredentialsProvider().getCredentials().isEmpty());
     }
-
+    
+    @Test
     public void testMalformedInput() throws Exception {
         assertTrue(CredentialsProvider.lookupCredentials(Credentials.class).isEmpty());
         SystemCredentialsProvider.getInstance().getCredentials().add(
@@ -53,6 +65,7 @@ public class SystemCredentialsProviderTest extends HudsonTestCase {
         assertTrue(new SystemCredentialsProvider().getCredentials().isEmpty());
     }
 
+    @Test
     public void testSmokes() throws Exception {
         assertEquals(true, !CredentialsProvider.allCredentialsDescriptors().isEmpty());
         assertNotNull(SystemCredentialsProvider.getInstance().getDisplayName());
